@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form/form-error";
+import { FormErrorAuth } from "@/components/auth/form-error";
 import { FormSuccess } from "@/components/form/form-success";
 import { newPassword } from "@/actions/new-password";
 
@@ -77,7 +77,7 @@ export const NewPasswordForm = () => {
               )}
             />
           </div>
-          <FormError message={error} />
+          <FormErrorAuth message={error} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full">
             Reset password

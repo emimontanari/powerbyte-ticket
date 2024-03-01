@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { FormError } from "@/components/form/form-error";
+import { FormError } from "@/components/form/form-errors";
 import { FormSuccess } from "@/components/form/form-success";
 import { UserRole } from "@prisma/client";
 

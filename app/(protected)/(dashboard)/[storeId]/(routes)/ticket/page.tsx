@@ -1,5 +1,5 @@
-import { HistoryTickets } from "@/components/ticket/history-tickets";
-import { TicketForm } from "@/app/(protected)/(platform)/ticket/_components/ticket-form";
+import { HistoryTickets } from "@/app/(protected)/(dashboard)/[storeId]/(routes)/ticket/_components/history-tickets";
+import { TicketForm } from "@/app/(protected)/(dashboard)/[storeId]/(routes)/ticket/_components/ticket-form";
 import {
   Card,
   CardContent,
@@ -7,21 +7,30 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { UserInfo } from "@/components/user-info";
 import { currentUser } from "@/lib/auth";
 import { TicketContainer } from "./_components/ticket-container";
+import { db } from "@/lib/db";
 
-const TicketPage = async () => {
-  const user = await currentUser();
+const TicketPage = async ({ params }: { params: { storeId: string } }) => {
+  const tickets = await db.ticket.findMany({
+    where: {
+      storeId: params.storeId,
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+
+  
 
   return (
     <>
       <Card className="col-span-2 h-[600px]">
         <CardHeader>
-          <CardTitle>Tickets Recientes</CardTitle>
+          <CardTitle>Tickets</CardTitle>
         </CardHeader>
         <CardContent className="pl-2">
-          <HistoryTickets />
+          <HistoryTickets data={tickets} />
         </CardContent>
       </Card>
       <Card className="col-span-4 md:col-span-5">
@@ -30,10 +39,7 @@ const TicketPage = async () => {
           <CardDescription>Información del Ticket</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <UserInfo label="Información del Ticket" user={user} />
-          <TicketContainer 
-            user={user}
-          />
+          <TicketContainer />
         </CardContent>
       </Card>
     </>

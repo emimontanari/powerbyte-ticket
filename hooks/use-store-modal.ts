@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { create } from 'zustand';
 
 interface useStoreModalStore {
   isOpen: boolean;
@@ -6,20 +6,10 @@ interface useStoreModalStore {
   onClose: () => void;
 }
 
-export const useStoreModal = (): useStoreModalStore => {
-  const [isOpen, setIsOpen] = useState(false);
+export const useStoreModal = create<useStoreModalStore>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
 
-  const onOpen = () => {
-    setIsOpen(true);
-  };
 
-  const onClose = () => {
-    setIsOpen(false);
-  };
-
-  return {
-    isOpen,
-    onOpen,
-    onClose,
-  };
-};

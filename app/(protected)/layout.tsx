@@ -1,3 +1,4 @@
+import { Toaster } from "sonner";
 import { Navbar } from "./_components/navbar";
 
 interface ProtectedLayoutProps {
@@ -7,7 +8,7 @@ interface ProtectedLayoutProps {
 const ProtectedLayout = ({ children }: ProtectedLayoutProps) => {
   return (
     <>
-      <Navbar />
+    <Toaster />
       {children}
     </>
   );

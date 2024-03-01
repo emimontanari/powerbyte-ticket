@@ -3,13 +3,30 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 enum UserRole {
   ADMIN
   USER
+}
+
+enum Status {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+model Store {
+  id        String   @id @default(uuid())
+  name      String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tickets   Ticket[] @relation("StoreToTicket")
 }
 
 model User {
@@ -42,6 +59,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -79,3 +97,30 @@ model TwoFactorConfirmation {
 
   @@unique([userId])
 }
+
+model Ticket {
+  id         String   @id @default(cuid())
+  storeId    String // Foreign Key to Store
+  store      Store    @relation("StoreToTicket", fields: [storeId], references: [id])
+  subject    String
+  message    String
+  status     String
+  priority   String
+  department String
+  services   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([storeId])
+}
+
+// model Image {
+//   id        String   @id @default(cuid())
+//   url       String
+//   ticketId String
+//   ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([ticketId])
+// }

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-import { FormError } from "./form-error";
+import { FormErrors } from "./form-errors";
 
 interface FormTextareaProps {
   id: string;
@@ -63,15 +63,12 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
             name={id}
             id={id}
             disabled={pending || disabled}
-            className={cn(
-              "text-sm px-2 py-1 h-7",
-              className
-            )}
+            className={cn("text-sm px-2 py-1 h-7", className)}
             aria-describedby={`${id}-error`}
             defaultValue={defaultValue}
           />
         </div>
-        <FormError id={id} errors={errors} />
+        <FormErrors id={id} errors={errors} />
       </div>
     );
   }

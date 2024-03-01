@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form/form-error";
+import { FormErrorAuth } from "@/components/auth/form-error";
 import { FormSuccess } from "@/components/form/form-success";
 import { login } from "@/actions/login";
 
@@ -147,7 +147,7 @@ export const LoginForm = () => {
               </>
             )}
           </div>
-          <FormError message={error || urlError} />
+          <FormErrorAuth  message={error || urlError} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full">
             {showTwoFactor ? "Confirm" : "Login"}

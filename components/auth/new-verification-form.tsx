@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 import { newVerification } from "@/actions/new-verification";
 import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError } from "@/components/form/form-error";
+import { FormErrorAuth } from "@/components/auth/form-error";
 import { FormSuccess } from "@/components/form/form-success";
 
 export const NewVerificationForm = () => {
@@ -48,7 +48,7 @@ export const NewVerificationForm = () => {
       <div className="flex items-center w-full justify-center">
         {!success && !error && <BeatLoader />}
         <FormSuccess message={success} />
-        {!success && <FormError message={error} />}
+        {!success && <FormErrorAuth message={error} />}
       </div>
     </CardWrapper>
   );
