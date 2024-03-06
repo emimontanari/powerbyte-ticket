@@ -104,7 +104,7 @@ model Ticket {
   store      Store    @relation("StoreToTicket", fields: [storeId], references: [id])
   subject    String
   message    String
-  status     String
+  status     Status   @default(OPEN)
   priority   String
   department String
   services   String
@@ -113,6 +113,30 @@ model Ticket {
 
   @@index([storeId])
 }
+
+
+model Deparment {
+  id       String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id       String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Priority {
+  id       String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
 
 // model Image {
 //   id        String   @id @default(cuid())

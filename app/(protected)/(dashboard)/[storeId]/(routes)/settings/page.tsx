@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { FormError } from "@/components/form/form-errors";
+import { FormErrors } from "@/components/form/form-errors";
 import { FormSuccess } from "@/components/form/form-success";
 import { UserRole } from "@prisma/client";
 
@@ -161,7 +161,7 @@ const SettingsPage = () => {
                   <FormItem>
                     <FormLabel>Role</FormLabel>
                     <Select
-                      disabled={isPending}
+                      disabled={user.role === "ADMIN" ? isPending : true}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
@@ -203,7 +203,7 @@ const SettingsPage = () => {
                 />
               )}
             </div>
-            <FormError message={error} />
+            {/* <FormErrors message={error || undefined} /> */}
             <FormSuccess message={success} />
             <Button disabled={isPending} type="submit">
               Save

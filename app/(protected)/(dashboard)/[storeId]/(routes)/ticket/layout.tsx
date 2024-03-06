@@ -1,12 +1,3 @@
-import { db } from "@/lib/db";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { HistoryTickets } from "./_components/history-tickets";
 
 // export async function generateMetadata({
 //   params,
@@ -24,13 +15,7 @@ import { HistoryTickets } from "./_components/history-tickets";
 //   };
 // }
 
-const TicketLayout = async ({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { storeId: string };
-}) => {
+const TicketLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7 mt-10 p-2">
       {children}

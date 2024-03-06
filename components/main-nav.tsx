@@ -16,9 +16,9 @@ export function MainNav({className, ...props }: React.HTMLAttributes<HTMLElement
       active: pathname === `/${params.storeId}`,
     },
     {
-      href: `/${params.storeId}/ticket`,
+      href: `/${params.storeId}/ticket/options-ticket`,
       label: "Ticket",
-      active: pathname === `/${params.storeId}/billboards`,
+      active: pathname === `/${params.storeId}/ticket/options-ticket`,
     },
     {
       href: `/${params.storeId}/settings`,

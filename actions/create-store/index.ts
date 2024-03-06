@@ -24,10 +24,6 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
     if (!name) return { error: "Name is required" }
 
-
-
-    console.log(data);
-
     try {
         const store = await db.store.create({
             data: {
@@ -36,11 +32,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
             }
         });
 
-
         return {
             data: store
         }
-
 
     } catch (error) {
         return {

@@ -63,13 +63,3 @@ export const RegisterSchema = z.object({
     message: "Name is required",
   }),
 });
-
-export const TicketMessageSchema = z.object({
-  subject: z.string().min(1, {
-    message: "El asunto es requerido",
-  }),
-  message: z.string().min(1, {
-    message: "El mensaje es requerido",
-  }),
-});
-

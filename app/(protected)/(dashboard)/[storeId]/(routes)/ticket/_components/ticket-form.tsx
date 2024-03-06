@@ -1,4 +1,5 @@
 "use client";
+import { useSearchParams } from "next/navigation";
 import { useRef, ElementRef } from "react";
 import { useParams } from "next/navigation";
 import { ExtendedUser } from "@/next-auth";
@@ -6,12 +7,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { FormInput } from "@/components/form/form-input";
 import { FormSubmit } from "@/components/form/form-submit";
 import { FormTextarea } from "@/components/form/form-textarea";
-import {
-  UserTicketInfo,
-  departmentDb,
-  priorityDb,
-  servicesDb,
-} from "@/app/(protected)/(dashboard)/[storeId]/(routes)/ticket/_components/user-ticket-info";
+import { UserTicketInfo } from "../_components/user-ticket-info";
 
 import {
   Select,
@@ -23,14 +19,27 @@ import {
 import { useAction } from "@/hooks/use-action";
 import { createTicket } from "@/actions/create-ticket";
 import { toast } from "sonner";
+import { Deparment, Priority, Service } from "@prisma/client";
 
 interface TicketFormProps {
   user?: ExtendedUser;
-  storeId: string;
+  service: Service[];
+  deparment: Deparment[];
+  priority: Priority[];
 }
 
-export const TicketForm = ({ user, storeId }: TicketFormProps) => {
+export const TicketForm = ({
+  user,
+  service,
+  deparment,
+  priority,
+}: TicketFormProps) => {
+
   const params = useParams();
+  const searchParams = useSearchParams();
+
+  const deparmentParams = searchParams.get("deparment");
+
   const formRef = useRef<ElementRef<"form">>(null);
   const inputRef = useRef<ElementRef<"input">>(null);
 
@@ -60,7 +69,7 @@ export const TicketForm = ({ user, storeId }: TicketFormProps) => {
       department,
       services,
       priority,
-      storeId
+      storeId,
     });
   };
 
@@ -76,16 +85,15 @@ export const TicketForm = ({ user, storeId }: TicketFormProps) => {
           <div className="flex flex-row w-full items-center">
             <div className="flex flex-col w-full">
               <p className="text-sm uppercase mb-1">Departamento</p>
-              <Select disabled={false} name="department" defaultValue={""}>
+              <Select disabled={isLoading} name="department" defaultValue={deparmentParams as string || ""}>
                 <SelectTrigger className="w-[100%] h-[40px]">
                   <SelectValue
-                    defaultValue=""
+                    defaultValue={deparmentParams as string || ""}
                     placeholder="Seleccione Departamento"
                   />
                 </SelectTrigger>
-
                 <SelectContent>
-                  {departmentDb.map((deparment) => (
+                  {deparment.map((deparment) => (
                     <SelectItem key={deparment.id} value={deparment.name}>
                       {deparment.name}
                     </SelectItem>
@@ -96,13 +104,16 @@ export const TicketForm = ({ user, storeId }: TicketFormProps) => {
 
             <div className="flex flex-col w-full">
               <p className="text-sm uppercase mb-1">Servicios Relacionados </p>
-              <Select disabled={false} name="services">
+              <Select disabled={isLoading} name="services" defaultValue="">
                 <SelectTrigger className="w-[100%] h-[40px]">
-                  <SelectValue placeholder="Seleccione Servicio" />
+                  <SelectValue
+                    placeholder="Seleccione Servicio"
+                    defaultValue={""}
+                  />
                 </SelectTrigger>
 
                 <SelectContent>
-                  {servicesDb.map((service) => (
+                  {service.map((service) => (
                     <SelectItem key={service.id} value={service.name}>
                       {service.name}
                     </SelectItem>
@@ -113,16 +124,16 @@ export const TicketForm = ({ user, storeId }: TicketFormProps) => {
 
             <div className="flex flex-col w-full">
               <p className="text-sm uppercase mb-1">Prioridad</p>
-              <Select disabled={false} name="priority">
+              <Select disabled={isLoading} name="priority" defaultValue="">
                 <SelectTrigger className="w-[100%] h-[40px]">
                   <SelectValue
-                    // defaultValue={deparment.value}
+                    defaultValue={""}
                     placeholder="Seleccione Prioridad"
                   />
                 </SelectTrigger>
 
                 <SelectContent>
-                  {priorityDb.map((priority) => (
+                  {priority.map((priority) => (
                     <SelectItem key={priority.id} value={priority.name}>
                       {priority.name}
                     </SelectItem>
@@ -145,15 +156,15 @@ export const TicketForm = ({ user, storeId }: TicketFormProps) => {
             id="subject"
             className="text-sm px-2 py-1 h-10 font-medium border-transparent hover:border-input focus:border-input transition"
             placeholder="Ingrese el asunto..."
+            disabled={isLoading}
           />
-          <input hidden id="listId" name="listId" value={storeId} />
-
           <FormTextarea
             label="Mensaje"
             id="message"
             placeholder="Ingrese el mensaje..."
             className="h-40 w-full px-2 py-1 font-medium border-transparent hover:border-input focus:border-input transition"
             errors={fieldErrors}
+            disabled={isLoading}
           />
           <div className="flex items-center gap-x-1">
             <FormSubmit
