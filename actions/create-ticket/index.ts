@@ -18,6 +18,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
     const { department, services, priority, subject, message, storeId } = data;
 
+
     if (!department || !services || !priority || !subject || !message) return { error: "All fields are required" }
 
     const dbUser = await getUserById(user.id);

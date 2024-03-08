@@ -38,14 +38,6 @@ docker compose build
 docker compose up
 ```
 
-
-### Docker Buildx
-
-```bash
- docker buildx build --platform linux/amd64,linux/arm64 \
- -t emimontanari/mercurio:latest --push .
-```
-
 ### Start the app
 
 ```shell

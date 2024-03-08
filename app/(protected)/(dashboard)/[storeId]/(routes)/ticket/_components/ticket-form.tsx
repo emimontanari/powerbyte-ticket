@@ -51,7 +51,7 @@ export const TicketForm = ({
       formRef.current?.reset();
     },
     onError: (error) => {
-      console.log(error);
+      toast.error("Error al crear el ticket");
     },
   });
 
@@ -82,7 +82,7 @@ export const TicketForm = ({
         <CardContent className="space-y-5">
           <UserTicketInfo user={user} label="Información del Ticket" />
 
-          <div className="flex flex-row w-full items-center">
+          <div className="flex flex-col w-full items-center md:flex-row gap-3">
             <div className="flex flex-col w-full">
               <p className="text-sm uppercase mb-1">Departamento</p>
               <Select disabled={isLoading} name="department" defaultValue={deparmentParams as string || ""}>

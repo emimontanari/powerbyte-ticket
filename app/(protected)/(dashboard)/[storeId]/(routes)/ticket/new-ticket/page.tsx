@@ -19,7 +19,7 @@ const NewTicketPage = async ({ params }: { params: { storeId: string, deparment:
   const priority = await db.priority.findMany();
 
   return (
-    <>
+    <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7 mt-10 p-2">
       <Card className="col-span-5 h-[600px] md:col-span-2">
         <CardHeader>
           <CardTitle>Tickets</CardTitle>
@@ -34,11 +34,8 @@ const NewTicketPage = async ({ params }: { params: { storeId: string, deparment:
         deparment={deparmentDb}
         priority={priority}
       />
-    </>
+    </div>
   );
 };
 
 export default NewTicketPage;
-
-
-//!! TODO: EN VEZ DE UNA PAGE, DEBERIA SER EL [DEPARMENT] PAGE Y QUE LA URL SE GENERE DEPENDIOENDO DEL DEPARMENTO, CAMBIAR EL NOMNRE A [DEPARMENT]

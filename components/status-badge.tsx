@@ -48,7 +48,7 @@ export const StatusBagge = ({
 }: StatusBaggeProps) => {
   return (
     <div className={cn(backgroundVariants({ variant }))}>
-      <div className={cn(iconVariants({ variant }) , "w-3 h-3 rounded-full mr-1")}>
+      <div className={cn(iconVariants({ variant }) , "w-2 h-2 rounded-full mr-1")}>
         </div>
       <p className="whitespace-nowrap text-xs uppercase">{status}</p>
     </div>

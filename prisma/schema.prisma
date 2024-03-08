@@ -21,12 +21,13 @@ enum Status {
 }
 
 model Store {
-  id        String   @id @default(uuid())
-  name      String
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tickets   Ticket[] @relation("StoreToTicket")
+  id            String         @id @default(uuid())
+  name          String
+  userId        String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  tickets       Ticket[]       @relation("StoreToTicket")
+  conversations Conversation[] @relation("StoreToCoversation")
 }
 
 model User {
@@ -100,10 +101,10 @@ model TwoFactorConfirmation {
 
 model Ticket {
   id         String   @id @default(cuid())
-  storeId    String // Foreign Key to Store
+  storeId    String
   store      Store    @relation("StoreToTicket", fields: [storeId], references: [id])
   subject    String
-  message    String
+  message    String   @db.VarChar(500)
   status     Status   @default(OPEN)
   priority   String
   department String
@@ -114,29 +115,49 @@ model Ticket {
   @@index([storeId])
 }
 
-
 model Deparment {
-  id       String   @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Service {
-  id       String   @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Priority {
-  id       String   @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model Conversation {
+  id            String    @id @default(cuid())
+  storeId       String
+  store         Store     @relation("StoreToCoversation", fields: [storeId], references: [id])
+  createdAt     DateTime  @default(now())
+  lastMessageAt DateTime  @default(now())
+  name          String?
+  messages      Message[]
 
+  @@index([storeId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  body           String?
+  image          String?
+  createdAt      DateTime     @default(now())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+
+  @@index([conversationId])
+}
 
 // model Image {
 //   id        String   @id @default(cuid())

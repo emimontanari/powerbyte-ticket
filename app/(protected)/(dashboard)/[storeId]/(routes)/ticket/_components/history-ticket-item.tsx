@@ -1,6 +1,7 @@
 import { StatusBagge } from "@/components/status-badge";
 import { Ticket } from "@prisma/client";
 import { TicketStatus } from "@/types";
+import {format, formatDistance } from 'date-fns'
 import Link from "next/link";
 
 interface HistoryTicketProps {
@@ -8,8 +9,9 @@ interface HistoryTicketProps {
 }
 
 export const HistoryTicketItem = ({ ticket }: HistoryTicketProps) => {
+
   return (
-    <Link href={`/ticket/${ticket.id}`}>
+    <Link href={`/${ticket.storeId}/ticket/${ticket.id}`}>
       <div className="space-y-8 mb-1 py-3 cursor-pointer rounded-sm hover:bg-slate-200 transition">
         <div className="flex items-center">
           <div className="ml-4 space-y-3 w-full">
@@ -23,7 +25,9 @@ export const HistoryTicketItem = ({ ticket }: HistoryTicketProps) => {
                 variant={ticket.status as TicketStatus}
               />
               <p className="text-sm text-gray-500 mr-2">
-                {ticket.createdAt.toLocaleString()}
+                {formatDistance(new Date(ticket.createdAt), new Date(), {
+                  addSuffix: true,
+                })}
               </p>
             </div>
           </div>
