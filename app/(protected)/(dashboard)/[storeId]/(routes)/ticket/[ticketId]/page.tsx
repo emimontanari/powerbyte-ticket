@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { currentUser } from "@/lib/auth";
 import { TicketConversation } from "./_components/ticket-conversation";
+import { TicketWithMessagesAndUser } from "@/types";
 
 const TicketIdPage = async ({
   params,
@@ -19,6 +20,17 @@ const TicketIdPage = async ({
     where: {
       id: ticketId,
     },
+    include: {
+      messages: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          sender: true,
+          images: true,
+        },
+      },
+    },
   });
 
   if (!ticket) return redirect(`/${storeId}/ticket`);
@@ -28,16 +40,13 @@ const TicketIdPage = async ({
       <Heading title={`Ticket #${params.ticketId}`} description="" />
       <Separator />
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7 mt-10 p-2">
-        <TicketInformation data={ticket} user={user}/>
-
+        <TicketInformation data={ticket} user={user} />
         <Card className="col-span-4 md:col-span-5">
           <CardHeader>
             <CardTitle>Información del Ticket</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-
-            <TicketConversation data={ticket} user={user}/>
-
+            <TicketConversation data={ticket} user={user} />
           </CardContent>
         </Card>
       </div>

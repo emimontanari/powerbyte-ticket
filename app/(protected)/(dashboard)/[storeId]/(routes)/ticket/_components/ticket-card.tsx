@@ -10,6 +10,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Deparment } from "@prisma/client";
 import Link from "next/link";
+import { Suspense } from "react";
 
 interface TicketCardProps {
   deparment: Deparment;

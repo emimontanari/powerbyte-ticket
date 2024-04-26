@@ -19,12 +19,17 @@ const Navbar = async () => {
       userId: user.id,
     }
   });
+  
 
+  const isAdmin = user.role === 'ADMIN';
+  
   return ( 
     <div className="border-b">
       <div className="flex h-16 items-center px-4">
-        <StoreSwitcher items={stores} />
-        <MainNav className="mx-6" />
+        {!isAdmin && (
+        <StoreSwitcher items={stores} /> 
+        )}
+        <MainNav className="mx-6"  isAdmin={isAdmin}/>
         <div className="ml-auto flex items-center space-x-4">
           <ThemeToggle />
           <UserButton />

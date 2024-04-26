@@ -1,8 +1,14 @@
-import {db} from "@/lib/db";
+import { db } from "@/lib/db";
 
 
 
-export const getTotalTicketStore = async (storeId: string) => {
+interface TotalTicket {
+  storeId: string;
+}
+
+
+export const getTotalTicketStore = async ({ storeId }: TotalTicket) => {
+
   const salesTicket = await db.ticket.count({
     where: {
       storeId,
@@ -11,3 +17,6 @@ export const getTotalTicketStore = async (storeId: string) => {
 
   return salesTicket;
 };
+
+
+

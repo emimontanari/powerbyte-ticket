@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation";
 import { currentUser } from "@/lib/auth";
-
 import { db } from "@/lib/db";
-import { getUserById } from "@/data/user";
 
 export default async function SetupLayout({
   children,
@@ -21,9 +19,9 @@ export default async function SetupLayout({
     },
   });
 
-  if (store) {
-    redirect(`/${store.id}`);
-  }
+  if (store) redirect(`/${store.id}`);
+
+  if (user.role === "ADMIN") redirect("/admin");
 
   return <>{children}</>;
 }

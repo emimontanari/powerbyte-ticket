@@ -34,6 +34,7 @@ const NewTicketPage = async ({ params }: { params: { storeId: string, deparment:
         deparment={deparmentDb}
         priority={priority}
       />
+      
     </div>
   );
 };

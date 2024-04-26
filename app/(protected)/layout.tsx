@@ -1,5 +1,6 @@
+import { currentUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { Toaster } from "sonner";
-import { Navbar } from "./_components/navbar";
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
@@ -8,7 +9,7 @@ interface ProtectedLayoutProps {
 const ProtectedLayout = ({ children }: ProtectedLayoutProps) => {
   return (
     <>
-    <Toaster />
+      <Toaster />
       {children}
     </>
   );

@@ -6,6 +6,7 @@ import { createSafeAction } from "@/lib/create-safe-action";
 import { InputType, ReturnType } from "./types";
 import { CreateTicket } from "./schema";
 import { revalidatePath } from "next/cache";
+import { Message, Ticket } from "@prisma/client";
 
 
 
@@ -16,7 +17,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     if (!user) return { error: "Unauthorized" }
 
 
-    const { department, services, priority, subject, message, storeId } = data;
+    const { department, services, priority, subject, message, storeId, images } = data;
 
 
     if (!department || !services || !priority || !subject || !message) return { error: "All fields are required" }
@@ -27,7 +28,8 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         return { error: "Unauthorized" }
     }
 
-    let ticket;
+    let ticket: Ticket;
+    let newMessage: Message;
 
     try {
         ticket = await db.ticket.create({
@@ -35,20 +37,43 @@ const handler = async (data: InputType): Promise<ReturnType> => {
                 department,
                 services,
                 priority,
-                subject,
-                message,
                 status: "OPEN",
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 storeId
             }
         })
+
+        newMessage = await db.message.create({
+            data: {
+                body: message,
+                subject,
+                ticketId: ticket.id,
+                senderId: user.id,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            }
+        })
+
+        if (images) {
+            await db.image.createMany({
+                data: images.map(image => ({
+                    url: image.url,
+                    messageId: newMessage.id,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+
+                }))
+            });
+
+        }
         revalidatePath(`/${storeId}/ticket`)
 
         return { data: ticket }
 
 
     } catch (error) {
+        console.log(error)
         return {
             error: "Failed to create ticket"
         }

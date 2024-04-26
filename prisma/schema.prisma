@@ -21,13 +21,12 @@ enum Status {
 }
 
 model Store {
-  id            String         @id @default(uuid())
-  name          String
-  userId        String
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  tickets       Ticket[]       @relation("StoreToTicket")
-  conversations Conversation[] @relation("StoreToCoversation")
+  id        String   @id @default(uuid())
+  name      String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tickets   Ticket[] @relation("StoreToTicket")
 }
 
 model User {
@@ -41,6 +40,7 @@ model User {
   accounts              Account[]
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
+  messages              Message[]
 }
 
 model Account {
@@ -100,17 +100,16 @@ model TwoFactorConfirmation {
 }
 
 model Ticket {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   storeId    String
-  store      Store    @relation("StoreToTicket", fields: [storeId], references: [id])
-  subject    String
-  message    String   @db.VarChar(500)
-  status     Status   @default(OPEN)
+  store      Store     @relation("StoreToTicket", fields: [storeId], references: [id])
+  status     Status    @default(OPEN)
   priority   String
   department String
   services   String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  messages   Message[]
 
   @@index([storeId])
 }
@@ -136,36 +135,29 @@ model Priority {
   updatedAt DateTime @updatedAt
 }
 
-model Conversation {
-  id            String    @id @default(cuid())
-  storeId       String
-  store         Store     @relation("StoreToCoversation", fields: [storeId], references: [id])
-  createdAt     DateTime  @default(now())
-  lastMessageAt DateTime  @default(now())
-  name          String?
-  messages      Message[]
-
-  @@index([storeId])
-}
-
 model Message {
-  id             String       @id @default(cuid())
-  body           String?
-  image          String?
-  createdAt      DateTime     @default(now())
-  conversationId String
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  id        String   @id @default(cuid())
+  subject   String?
+  body      String?  @db.VarChar(500)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ticketId  String
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  images    Image[]
 
-  @@index([conversationId])
+  @@index([senderId])
+  @@index([ticketId])
 }
 
-// model Image {
-//   id        String   @id @default(cuid())
-//   url       String
-//   ticketId String
-//   ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
+model Image {
+  id        String   @id @default(cuid())
+  url       String
+  messageId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
-//   @@index([ticketId])
-// }
+  @@index([messageId])
+}

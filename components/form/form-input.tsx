@@ -20,6 +20,7 @@ interface FormInputProps {
   className?: string;
   defaultValue?: string;
   onBlur?: () => void;
+  multiple? : boolean;
 };
 
 export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(({
@@ -32,7 +33,8 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(({
   errors,
   className,
   defaultValue = "",
-  onBlur
+  onBlur,
+  multiple = false,
 }, ref) => {
   const { pending } = useFormStatus();
 
@@ -62,6 +64,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(({
             className,
           )}
           aria-describedby={`${id}-error`}
+          multiple={multiple}
         />
       </div>
       <FormErrors

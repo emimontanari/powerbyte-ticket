@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { useRef, ElementRef } from "react";
+import { useRef, ElementRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { ExtendedUser } from "@/next-auth";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -19,13 +19,14 @@ import {
 import { useAction } from "@/hooks/use-action";
 import { createTicket } from "@/actions/create-ticket";
 import { toast } from "sonner";
-import { Deparment, Priority, Service } from "@prisma/client";
+import { Deparment, Image, Priority, Service } from "@prisma/client";
+import { ImageUpload } from "@/components/ui/image-upload";
 
 interface TicketFormProps {
   user?: ExtendedUser;
-  service: Service[];
-  deparment: Deparment[];
-  priority: Priority[];
+  service?: Service[];
+  deparment?: Deparment[];
+  priority?: Priority[];
 }
 
 export const TicketForm = ({
@@ -34,7 +35,7 @@ export const TicketForm = ({
   deparment,
   priority,
 }: TicketFormProps) => {
-
+  const [valueImages, setValueImages] = useState<Image[]>([]);
   const params = useParams();
   const searchParams = useSearchParams();
 
@@ -49,19 +50,24 @@ export const TicketForm = ({
         description: `${data.createdAt}`,
       });
       formRef.current?.reset();
+
+      setValueImages([]);
     },
     onError: (error) => {
+      console.log(error);
       toast.error("Error al crear el ticket");
     },
   });
 
-  const onSubmit = (formData: FormData) => {
+  const onSubmit = async (formData: FormData) => {
     const subject = formData.get("subject") as string;
     const message = formData.get("message") as string;
     const department = formData.get("department") as string;
     const services = formData.get("services") as string;
     const priority = formData.get("priority") as string;
     const storeId = params.storeId as string;
+    // const files = formData.getAll("image") as File[];
+    const images = valueImages.map((image) => image) as Image[]
 
     execute({
       subject,
@@ -70,6 +76,7 @@ export const TicketForm = ({
       services,
       priority,
       storeId,
+      images
     });
   };
 
@@ -85,15 +92,19 @@ export const TicketForm = ({
           <div className="flex flex-col w-full items-center md:flex-row gap-3">
             <div className="flex flex-col w-full">
               <p className="text-sm uppercase mb-1">Departamento</p>
-              <Select disabled={isLoading} name="department" defaultValue={deparmentParams as string || ""}>
+              <Select
+                disabled={isLoading}
+                name="department"
+                defaultValue={(deparmentParams as string) || ""}
+              >
                 <SelectTrigger className="w-[100%] h-[40px]">
                   <SelectValue
-                    defaultValue={deparmentParams as string || ""}
+                    defaultValue={(deparmentParams as string) || ""}
                     placeholder="Seleccione Departamento"
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  {deparment.map((deparment) => (
+                  {deparment?.map((deparment) => (
                     <SelectItem key={deparment.id} value={deparment.name}>
                       {deparment.name}
                     </SelectItem>
@@ -113,7 +124,7 @@ export const TicketForm = ({
                 </SelectTrigger>
 
                 <SelectContent>
-                  {service.map((service) => (
+                  {service?.map((service) => (
                     <SelectItem key={service.id} value={service.name}>
                       {service.name}
                     </SelectItem>
@@ -133,7 +144,7 @@ export const TicketForm = ({
                 </SelectTrigger>
 
                 <SelectContent>
-                  {priority.map((priority) => (
+                  {priority?.map((priority) => (
                     <SelectItem key={priority.id} value={priority.name}>
                       {priority.name}
                     </SelectItem>
@@ -166,6 +177,16 @@ export const TicketForm = ({
             errors={fieldErrors}
             disabled={isLoading}
           />
+          <ImageUpload
+            onChange={(url) => {setValueImages((prev) => [...prev, { url } as Image]);}}
+            onRemove={(url) => {
+              setValueImages((prev) =>
+                prev.filter((image) => image.url !== url)
+              );
+            }}
+            value={valueImages?.map((image) => image.url)}
+          />
+
           <div className="flex items-center gap-x-1">
             <FormSubmit
               className="w-[25%] h-10 bg-primary text-white font-semibold"

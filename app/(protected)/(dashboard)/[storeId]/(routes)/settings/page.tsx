@@ -159,9 +159,9 @@ const SettingsPage = () => {
                 name="role"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Role</FormLabel>
+                    <FormLabel>Role</FormLabel>x
                     <Select
-                      disabled={user.role === "ADMIN" ? isPending : true}
+                      disabled={user?.role === "ADMIN" ? isPending : true}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >

@@ -13,6 +13,9 @@ const TicketPage = async ({ params }: { params: { storeId: string } }) => {
     where: {
       storeId: params.storeId,
     },
+    include: {
+      messages: true,
+    },
     orderBy: {
       createdAt: "desc",
     },
@@ -21,7 +24,7 @@ const TicketPage = async ({ params }: { params: { storeId: string } }) => {
   const formattedTickets: TicketColumn[] = tickets.map((ticket) => ({
     id: ticket.id,
     department: ticket.department,
-    subject: ticket.subject,
+    subject: ticket.messages[0].subject as string,
     priority: ticket.priority,
     status: ticket.status,
     createdAt: format(ticket.createdAt, "MMMM do, yyyy"),
@@ -33,7 +36,6 @@ const TicketPage = async ({ params }: { params: { storeId: string } }) => {
       <Separator />
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7 mt-10 p-2">
         <Card className="col-span-4 h-[600px] md:col-span-2">
-          
           <CardHeader>
             <CardTitle>Support</CardTitle>
           </CardHeader>

@@ -26,4 +26,7 @@ export const CreateTicket = z.object({
     message: "El mensaje debe tener al menos 3 caracteres."
   }),
   storeId: z.string(),
+  images: z.array(z.object({
+    url: z.string(),
+  })).optional(),
 });

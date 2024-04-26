@@ -6,6 +6,7 @@ import { CellAction } from "./cell-action";
 import { StatusBagge } from "@/components/status-badge";
 import { TicketStatus } from "@/types";
 import { Button } from "@/components/ui/button";
+import { Message } from "@prisma/client";
 
 export type TicketColumn = {
   id: string;

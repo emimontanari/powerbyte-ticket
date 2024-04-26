@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Deparment, Priority, Service } from "@prisma/client";
 
+
 interface TicketContainerProps {
   service: Service[];
   deparment: Deparment[];
@@ -35,6 +36,7 @@ export const TicketContainer = async ({
           deparment={deparment}
           priority={priority}
         />
+
       </CardContent>
     </Card>
   );

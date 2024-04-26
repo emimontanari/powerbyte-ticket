@@ -1,3 +1,6 @@
+
+
+
 const TicketLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex-col">

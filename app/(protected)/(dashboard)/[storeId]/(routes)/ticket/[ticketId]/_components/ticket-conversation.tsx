@@ -1,42 +1,51 @@
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { MessageWithImages, TicketWithMessages } from "@/types";
+import { TicketMessage } from "./ticket-message";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Pencil } from "lucide-react";
+import TicketReplyMessage from "./ticket-reply-message";
 import { ExtendedUser } from "@/next-auth";
-import { Ticket } from "@prisma/client";
-import { format } from "date-fns";
-import { UserRound } from "lucide-react";
+import { AlertDestructive } from "@/components/messages/alert-message";
 
 interface TicketConversationProps {
-  data: Ticket;
+  data: TicketWithMessages;
   user?: ExtendedUser;
 }
 
 export const TicketConversation = ({ data, user }: TicketConversationProps) => {
-  const { message, createdAt } = data;
 
-  const messageLines = message.split("\n");
-
+  const isClosed = data.status === "CLOSED";
+  
   return (
-    <Card className="space-y-4 p-5 border-l-4 border-l-blue-900">
-      <div className="flex flex-col space-y-2">
-        <div className="flex items-center space-x-2">
-          <UserRound className="w-4 h-4" />
-          <span className="font-bold uppercase">{user?.name}</span>
-        </div>
-        <div className="flex flex-row justify-between items-center">
-          <span className="bg-green-200 text-green-600 py-1 px-2 rounded-sm text-xs uppercase font-semibold float-right">
-            Propietario
-          </span>
-          <div className="text-gray-500">
-            {format(new Date(data.createdAt), "MMMM d 'at' h:mm a")}
-          </div>
-        </div>
-      </div>
-      <Separator />
-      <div className="space-y-4 p-1 text-start">
-        {messageLines.map((line, index) => (
-          <p key={index}>{line}</p>
-        ))}
-      </div>
-    </Card>
+    <>
+      {isClosed && (
+        <AlertDestructive
+          variant="default"
+          className="border-blue-300 text-blue-600 font-semibold text-start bg-sky-100"
+        >
+          This ticket is closed. You may reply to this ticket to reopen it.
+        </AlertDestructive>
+      )}
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value="item-1">
+          <AccordionTrigger>
+            <div className="flex items-center justify-center space-x-4 text-blue-600 font-semibold">
+              <Pencil className="w-5 h-5 t" />
+              <p className="text-xl">Responder</p>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <TicketReplyMessage user={user as ExtendedUser} data={data} />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+      {data.messages.map((message) => (
+        <TicketMessage data={message as MessageWithImages} key={message.id} />
+      ))}
+    </>
   );
 };
