@@ -52,9 +52,11 @@ const TicketReplyMessage = ({ user, data }: TicketReplyMessageProps) => {
       body,
       storeId,
       ticketId,
-      images
+      images,
     });
   };
+
+  console.log(isLoading)
   return (
     <form action={onSubmit} className="w-full space-y-6" ref={formRef}>
       <Card className="w-full shadow-sm">
@@ -93,7 +95,14 @@ const TicketReplyMessage = ({ user, data }: TicketReplyMessageProps) => {
               className="w-[25%] h-10 bg-primary text-white font-semibold"
               disabled={isLoading}
             >
-              Enviar
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Please wait
+                </>
+              ) : (
+                "Enviar"
+              )}
             </FormSubmit>
           </div>
         </CardContent>

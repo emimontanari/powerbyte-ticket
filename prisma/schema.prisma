@@ -20,6 +20,7 @@ enum Status {
   CLOSED
 }
 
+
 model Store {
   id        String   @id @default(uuid())
   name      String

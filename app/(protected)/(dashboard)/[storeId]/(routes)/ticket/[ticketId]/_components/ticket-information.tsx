@@ -21,7 +21,7 @@ export const TicketInformation = async ({
   const isAdmin = user?.role === "ADMIN";
 
   return (
-    <Card className="col-span-4 h-[650px] md:col-span-2">
+    <Card className="col-span-4 h-[650px] md:col-span-2 overflow-scroll">
       <CardHeader>
         <CardTitle>Ticket Information</CardTitle>
       </CardHeader>

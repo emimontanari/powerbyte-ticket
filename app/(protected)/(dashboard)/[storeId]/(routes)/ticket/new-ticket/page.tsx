@@ -20,7 +20,7 @@ const NewTicketPage = async ({ params }: { params: { storeId: string, deparment:
 
   return (
     <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7 mt-10 p-2">
-      <Card className="col-span-5 h-[600px] md:col-span-2">
+      <Card className="col-span-5 h-[600px] md:col-span-2 overflow-scroll">
         <CardHeader>
           <CardTitle>Tickets</CardTitle>
         </CardHeader>

@@ -21,6 +21,7 @@ import { createTicket } from "@/actions/create-ticket";
 import { toast } from "sonner";
 import { Deparment, Image, Priority, Service } from "@prisma/client";
 import { ImageUpload } from "@/components/ui/image-upload";
+import { AlertDestructive } from "@/components/messages/alert-message";
 
 interface TicketFormProps {
   user?: ExtendedUser;
@@ -44,7 +45,7 @@ export const TicketForm = ({
   const formRef = useRef<ElementRef<"form">>(null);
   const inputRef = useRef<ElementRef<"input">>(null);
 
-  const { execute, fieldErrors, isLoading } = useAction(createTicket, {
+  const { execute, fieldErrors, error } = useAction(createTicket, {
     onSuccess: (data) => {
       toast.success("El Ticket a sido creado", {
         description: `${data.createdAt}`,
@@ -54,7 +55,6 @@ export const TicketForm = ({
       setValueImages([]);
     },
     onError: (error) => {
-      console.log(error);
       toast.error("Error al crear el ticket");
     },
   });
@@ -67,8 +67,7 @@ export const TicketForm = ({
     const priority = formData.get("priority") as string;
     const storeId = params.storeId as string;
     // const files = formData.getAll("image") as File[];
-    const images = valueImages.map((image) => image) as Image[]
-
+    const images = valueImages.map((image) => image) as Image[];
     execute({
       subject,
       message,
@@ -76,12 +75,22 @@ export const TicketForm = ({
       services,
       priority,
       storeId,
-      images
+      images,
     });
   };
 
+  console.log(error);
   return (
     <form action={onSubmit} className="w-full space-y-6" ref={formRef}>
+      {error && (
+        <AlertDestructive
+          className="text-center text-sm bg-red-100"
+          variant="destructive"
+        >
+          {error}
+        </AlertDestructive>
+      )}
+
       <Card className="w-full shadow-sm">
         <CardHeader>
           <p className="text-2xl font-semibold text-center">{""}</p>
@@ -93,7 +102,6 @@ export const TicketForm = ({
             <div className="flex flex-col w-full">
               <p className="text-sm uppercase mb-1">Departamento</p>
               <Select
-                disabled={isLoading}
                 name="department"
                 defaultValue={(deparmentParams as string) || ""}
               >
@@ -115,7 +123,7 @@ export const TicketForm = ({
 
             <div className="flex flex-col w-full">
               <p className="text-sm uppercase mb-1">Servicios Relacionados </p>
-              <Select disabled={isLoading} name="services" defaultValue="">
+              <Select name="services" defaultValue={undefined}>
                 <SelectTrigger className="w-[100%] h-[40px]">
                   <SelectValue
                     placeholder="Seleccione Servicio"
@@ -135,7 +143,7 @@ export const TicketForm = ({
 
             <div className="flex flex-col w-full">
               <p className="text-sm uppercase mb-1">Prioridad</p>
-              <Select disabled={isLoading} name="priority" defaultValue="">
+              <Select name="priority" defaultValue={undefined}>
                 <SelectTrigger className="w-[100%] h-[40px]">
                   <SelectValue
                     defaultValue={""}
@@ -165,20 +173,20 @@ export const TicketForm = ({
             ref={inputRef}
             errors={fieldErrors}
             id="subject"
-            className="text-sm px-2 py-1 h-10 font-medium border-transparent hover:border-input focus:border-input transition"
+            className="text-sm px-2 py-1 h-10 font-medium border-2 hover:border-input focus:border-input transition"
             placeholder="Ingrese el asunto..."
-            disabled={isLoading}
           />
           <FormTextarea
             label="Mensaje"
             id="message"
             placeholder="Ingrese el mensaje..."
-            className="h-40 w-full px-2 py-1 font-medium border-transparent hover:border-input focus:border-input transition"
+            className="h-40 w-full px-2 py-1 font-medium border-2 hover:border-input focus:border-input transition"
             errors={fieldErrors}
-            disabled={isLoading}
           />
           <ImageUpload
-            onChange={(url) => {setValueImages((prev) => [...prev, { url } as Image]);}}
+            onChange={(url) => {
+              setValueImages((prev) => [...prev, { url } as Image]);
+            }}
             onRemove={(url) => {
               setValueImages((prev) =>
                 prev.filter((image) => image.url !== url)
@@ -188,10 +196,7 @@ export const TicketForm = ({
           />
 
           <div className="flex items-center gap-x-1">
-            <FormSubmit
-              className="w-[25%] h-10 bg-primary text-white font-semibold"
-              disabled={isLoading}
-            >
+            <FormSubmit className="w-[25%] h-10 bg-primary text-white font-semibold">
               Enviar
             </FormSubmit>
           </div>

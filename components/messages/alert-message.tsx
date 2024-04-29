@@ -17,7 +17,7 @@ export function AlertDestructive({
   return (
     <Alert variant={variant} className={cn("border" , className)}>
       {/* <AlertTitle>Error</AlertTitle> */}
-      <AlertDescription className="text-lg">{children}</AlertDescription>
+      <AlertDescription>{children}</AlertDescription>
     </Alert>
   );
 }

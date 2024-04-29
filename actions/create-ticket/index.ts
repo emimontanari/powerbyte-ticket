@@ -20,7 +20,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     const { department, services, priority, subject, message, storeId, images } = data;
 
 
-    if (!department || !services || !priority || !subject || !message) return { error: "All fields are required" }
+    if (!department || !services || !priority || !subject || !message) return { error: "Todos los campos son requeridos" }
 
     const dbUser = await getUserById(user.id);
 
@@ -73,7 +73,6 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
 
     } catch (error) {
-        console.log(error)
         return {
             error: "Failed to create ticket"
         }
