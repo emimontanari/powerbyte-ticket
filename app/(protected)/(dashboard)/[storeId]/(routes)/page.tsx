@@ -14,7 +14,8 @@ interface DashboardPageProps {
 }
 
 const DashboardPage: React.FC<DashboardPageProps> = async ({ params }) => {
-  const totalTicket = await getTotalTicketStore(params.storeId);
+  
+  const totalTicket = await getTotalTicketStore({ storeId: params.storeId });
   const user = await currentUser();
 
   if (!user) redirect("/sign-in");
@@ -24,11 +25,11 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({ params }) => {
       userId: user.id,
     },
   });
-  
+
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <Heading title={`Binvenidos`}description="Overview of your store" />
+        <Heading title={`Binvenidos`} description="Overview of your store" />
         <Separator />
         <div className="grid gap-4 grid-cols-3">
           <Card>
@@ -48,7 +49,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({ params }) => {
               <Ticket className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{ totalTicket}</div>
+              <div className="text-2xl font-bold">{totalTicket}</div>
             </CardContent>
           </Card>
           <Card>
